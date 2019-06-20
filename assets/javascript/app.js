@@ -23,14 +23,13 @@ var rightAnswers = ["b. Navajo", "c. five", "a. Glasses", "d. Joe Montana"]
 //things to say when user answers correctly 
 var approval = ["Nice", "You're a trivia pro", "Good Work", "A++"]
 var disapproval = ["You suck", "c'mon son", "gtfoh with that ish", "You're better than that"]
-var right = 0; 
+var right = 0;
 var wrong = 0;
-var input = false; 
-//button to start timer
+//function to create elements for answers  
 function answers(i) {
     var answers = questionArr[i].answer
     for (var i = 0; i < answers.length; i++) {
-        var newElement = document.createElement('div');
+        var newElement = document.createElement('p');
         newElement.id = answers[i]; newElement.className = "answer";
         newElement.innerHTML = answers[i];
         $('#answers').append(newElement);
@@ -38,46 +37,57 @@ function answers(i) {
 }
 var timer = 10
 var i = 0
-$('#start').on('click', function (){
-    setInterval(function clock(){
-        timer-- ; 
+//on click start function
+$('#start').on('click', function () {
+    question(i)
+    clock()
+})
+
+var clock = setInterval(function () {
+        timer--;
         $('#timer').html(timer)
         if (timer === 0) {
-            wrong++; 
+            wrong++;
             console.log(wrong)
-            timer = 10; 
-            $('#timer').html(timer); 
+            timer = 10;
+            $('#timer').html(timer);
             i++
             question(i)
-        } 
-    },1000)
-    setTimeout(question(i), 10000); 
-})
+//if game over... cant clear interval or timeout
+        } else if (i >= questionArr.length) {
+            $('.q-container').empty()
+            clearInterval(clock)
+            $('#timer').empty()
+            $('.q-container').append(`<p id = "over">Correct: ${right}`)
+            $('.q-container').append(`<p id = "over">Incorrect: ${wrong}`)
+        }
+    }, 1000)
+
 
 //writes question and answer options
 function question(i) {
     $('#question').html(questionArr[i].question);
     $('#answers').html('')
     answers(i)
-}; 
+};
 
-
-$('#answers').on('click', function (event) { 
-    var value = event.target.id; 
+//on answer click function 
+$('#answers').on('click', function (event) {
+    var value = event.target.id;
     console.log(value)
     if (value === rightAnswers[i]) {
-        right++; 
+        right++;
         console.log(right)
-        clearTimeout(question);
-        timer = 10; 
-        i++; 
+        // clearTimeout(question);
+        timer = 10;
+        i++;
         question(i)
     } else {
-        wrong++; 
+        wrong++;
         console.log(wrong)
-        clearTimeout(question)
-        timer = 10; 
-        i++; 
+        // clearTimeout(question)
+        timer = 10;
+        i++;
         question(i)
     }
 })
@@ -85,21 +95,7 @@ $('#answers').on('click', function (event) {
 
 
 
-//gets the clicked answer, declares it correct or not
-    // $('.answer').on('click', function click (e) { 
-    //     var value = this.id
-    //     if (value === rightAnswers[i]) {
-    //         right++
-    //         clearTimeout(callback);
-    //         timer = 10; 
-    //         i++; 
-    //         question(i)
-    //     } else {
-    //         wrong++
-    //         clearTimeout(callback)
-    //         timer = 10; 
-    //     }
-    // })
+
 
 
 
